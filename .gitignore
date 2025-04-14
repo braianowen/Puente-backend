@@ -1,0 +1,50 @@
+# backend/.gitignore
+
+# Entornos virtuales
+venv/
+.env/
+venv*/
+
+# Archivos de Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyd
+*.pyo
+*.egg-info/
+*.egg
+dist/
+build/
+*.so
+
+# Archivos de entorno y claves
+.env
+.env.local
+.env.development
+.env.production
+secrets.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs y bases de datos
+*.log
+*.sqlite
+*.db
+*.dump
+
+# Archivos generados por el sistema
+.DS_Store
+Thumbs.db
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Otros
+tmp/
+temp/
