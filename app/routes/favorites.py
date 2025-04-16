@@ -9,6 +9,16 @@ from app.core.security import get_current_user
 
 router = APIRouter(tags=["Favorites"])
 
+@router.get("/favorites", response_model=list[FavoriteResponse])
+def get_favorites(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    favorites = db.query(Favorite).filter(
+        Favorite.user_id == current_user.id
+    ).all()
+    return favorites
+
 @router.post("/favorites", response_model=FavoriteResponse)
 def add_favorite(
     favorite: FavoriteCreate,
