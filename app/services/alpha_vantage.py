@@ -3,11 +3,11 @@ import requests
 from datetime import datetime, timedelta
 
 class AlphaVantageService:
-    def __init__(self, api_key="TU_API_KEY"):
+    def __init__(self, api_key="WDLRLBJLWOV16ST9"):
         self.base_url = "https://www.alphavantage.co/query"
         self.api_key = api_key
         self.cache = {}
-        self.cache_duration = timedelta(minutes=5)  # Actualizar cada 5 minutos
+        self.cache_duration = timedelta(minutes=15)  # Actualizar cada 5 minutos
 
     def _is_cache_valid(self, symbol):
         cached_data = self.cache.get(symbol)
@@ -17,8 +17,10 @@ class AlphaVantageService:
 
     def get_global_quote(self, symbol: str):
         if self._is_cache_valid(symbol):
+            print(f"✅ [CACHE] Datos de {symbol} obtenidos desde el caché")
             return self.cache[symbol]["data"]
         
+        print(f"🌐 [API] Solicitando datos de {symbol} desde Alpha Vantage")
         params = {
             "function": "GLOBAL_QUOTE",
             "symbol": symbol,
