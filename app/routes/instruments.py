@@ -1,14 +1,12 @@
-# backend/app/routes/instruments.py (actualizado)
-from fastapi import APIRouter, Depends, HTTPException
-from app.models.user import User
+# backend/app/routes/instruments.py (versión pública)
+from fastapi import APIRouter, HTTPException
 from app.services.alpha_vantage import AlphaVantageService
-from app.core.security import get_current_user
 
 router = APIRouter(tags=["Instruments"])
 alpha_vantage = AlphaVantageService()
 
 @router.get("/instruments/{symbol}")
-def get_instrument(symbol: str, current_user: User = Depends(get_current_user)):
+def get_instrument(symbol: str):
     data = alpha_vantage.get_global_quote(symbol)
     if not data:
         raise HTTPException(status_code=404, detail="Instrumento no encontrado")

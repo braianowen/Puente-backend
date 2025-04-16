@@ -3,11 +3,11 @@ import requests
 from datetime import datetime, timedelta
 
 class AlphaVantageService:
-    def __init__(self, api_key="WDLRLBJLWOV16ST9"):
+    def __init__(self, api_key="9GB194M168WJYBUD"):
         self.base_url = "https://www.alphavantage.co/query"
         self.api_key = api_key
         self.cache = {}
-        self.cache_duration = timedelta(minutes=15)  # Actualizar cada 5 minutos
+        self.cache_duration = timedelta(minutes=160) 
 
     def _is_cache_valid(self, symbol):
         cached_data = self.cache.get(symbol)
