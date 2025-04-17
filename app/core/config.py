@@ -1,5 +1,5 @@
 # backend/app/core/config.py
-from pydantic_settings import BaseSettings  # <-- Cambio aquí
+from pydantic_settings import BaseSettings 
 
 class Settings(BaseSettings):
     SECRET_KEY: str = "supersecretkey"

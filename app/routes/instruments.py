@@ -1,19 +1,23 @@
-# backend/app/routes/instruments.py (versión pública)
+# backend/app/routes/instruments.py
 from fastapi import APIRouter, HTTPException
-from app.services.alpha_vantage import AlphaVantageService
+from app.services.market_service import MarketDataService
+from typing import Optional
 
 router = APIRouter(tags=["Instruments"])
-alpha_vantage = AlphaVantageService()
+market_service = MarketDataService()
 
 @router.get("/instruments/{symbol}")
 def get_instrument(symbol: str):
-    data = alpha_vantage.get_global_quote(symbol)
+    data = market_service.get_instrument_data(symbol)
     if not data:
         raise HTTPException(status_code=404, detail="Instrumento no encontrado")
     
-    return {
-        "symbol": symbol,
-        "price": data.get("05. price"),
-        "change": data.get("09. change"),
-        "change_percent": data.get("10. change percent")
-    }
+    return data
+
+@router.get("/instruments/{symbol}/history")
+def get_instrument_history(symbol: str, days: int = 30):
+    historical_data = market_service.get_historical_data(symbol, days)
+    if not historical_data:
+        raise HTTPException(status_code=404, detail="Datos históricos no disponibles")
+    
+    return {"symbol": symbol, "history": historical_data}
