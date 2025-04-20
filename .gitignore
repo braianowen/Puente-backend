@@ -17,6 +17,19 @@ dist/
 build/
 *.so
 
+# Docker
+**/docker-compose.override.yml
+**/.docker
+**/data
+.dockerignore
+Dockerfile.prod
+Dockerfile.dev
+
+# Entornos virtuales
+**/venv
+**/.venv
+**/env
+
 # Archivos de entorno y claves
 .env
 .env.local

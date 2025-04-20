@@ -1,15 +1,21 @@
-# backend/app/db/database.py
+# app/db/database.py
+from sqlalchemy.orm import declarative_base
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import os
 
-SQLALCHEMY_DATABASE_URL = "postgresql://admin:admin@localhost/tradingplatform?options=-csearch_path=trading_schema"
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://admin:password@db:5432/mydb")
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(
+    DATABASE_URL,
+    connect_args={"options": f"-csearch_path={os.getenv('DB_SCHEMA', 'trading_schema')}"}
+)
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 Base = declarative_base()
 
-# función para obtener la sesión de la base de datos
+# Función para obtener la sesión de la base de datos
 def get_db():
     db = SessionLocal()
     try:

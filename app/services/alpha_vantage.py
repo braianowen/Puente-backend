@@ -28,10 +28,10 @@ class AlphaVantageService:
     def get_global_quote(self, symbol: str) -> Dict:
         cache_key = (symbol, "GLOBAL_QUOTE")
         if self._is_cache_valid(*cache_key):
-            print(f"✅ [CACHE] Datos de {symbol} obtenidos desde el caché (GLOBAL_QUOTE)")
+            print(f"✅ [CACHE] Datos de {symbol} obtenidos desde caché")
             return self.cache[cache_key]["data"]
         
-        print(f"🌐 [API] Solicitando GLOBAL_QUOTE para {symbol}")
+        print(f"🌐 [API] Solicitando datos para {symbol}")
         params = {
             "function": "GLOBAL_QUOTE",
             "symbol": symbol,
@@ -39,9 +39,22 @@ class AlphaVantageService:
         }
         
         data = self._make_request(params)
-        quote_data = data.get("Global Quote", {}) if data else {}
+        if not data:
+            print(f"❌ [API] No se obtuvieron datos para {symbol}")
+            return {}
         
-        # Transformar datos a formato consistente
+        # Manejar errores de la API
+        if "Information" in data:
+            print(f"⚠️ [API] Mensaje de AlphaVantage: {data['Information']}")
+            return {"error": data["Information"]}
+        
+        if "Error Message" in data:
+            print(f"❌ [API] Error de AlphaVantage: {data['Error Message']}")
+            return {"error": data["Error Message"]}
+        
+        quote_data = data.get("Global Quote", {})
+        
+        # Procesamiento consistente de datos
         processed_data = {
             'symbol': symbol,
             'price': quote_data.get('05. price'),
@@ -52,7 +65,8 @@ class AlphaVantageService:
             'low': quote_data.get('04. low'),
             'volume': quote_data.get('06. volume'),
             'latest_trading_day': quote_data.get('07. latest trading day'),
-            'previous_close': quote_data.get('08. previous close')
+            'previous_close': quote_data.get('08. previous close'),
+            'source': 'AlphaVantage'
         }
         
         # Almacenar en caché
